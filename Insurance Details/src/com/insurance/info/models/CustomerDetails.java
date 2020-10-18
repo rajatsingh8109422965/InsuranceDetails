@@ -8,12 +8,19 @@ public class CustomerDetails {
 	private String mobileNo;
 	private String address;
 	private String email;
-	private Timestamp dateofIssue;
+	private String dateofIssue;
 	private String periodOfInsurance;
 	private String typeOfInsurance;
+	private String dateOfExpiryDate;
 	
 	
 	
+	public String getDateOfExpiryDate() {
+		return dateOfExpiryDate;
+	}
+	public void setDateOfExpiryDate(String dateOfExpiryDate) {
+		this.dateOfExpiryDate = dateOfExpiryDate;
+	}
 	public String getAddress() {
 		return address;
 	}
@@ -44,10 +51,10 @@ public class CustomerDetails {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Timestamp getDateofIssue() {
+	public String getDateofIssue() {
 		return dateofIssue;
 	}
-	public void setDateofIssue(Timestamp dateofIssue) {
+	public void setDateofIssue(String dateofIssue) {
 		this.dateofIssue = dateofIssue;
 	}
 	public String getTypeOfInsurance() {
