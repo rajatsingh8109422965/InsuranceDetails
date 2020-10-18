@@ -1,34 +1,30 @@
-package com.insurance.info.signup;
+package com.insurance.info;
 
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.insurance.info.InsuranceApplication;
 import com.insurance.info.config.DataSourceConfig;
+
 import java.awt.Color;
 import java.awt.Cursor;
+
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
+
+import javax.swing.JTextField;
 import java.awt.Button;
 
-public class SignUp extends JFrame {
+public class InsuranceForm extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private int xMouse;
@@ -41,7 +37,7 @@ public class SignUp extends JFrame {
 	private JTextField passwordTextField;
 	private JTextField mobileNoTextField;
 
-	public SignUp() {
+	public InsuranceForm() {
 		setupFrame();
 
 		makePaneDraggable();

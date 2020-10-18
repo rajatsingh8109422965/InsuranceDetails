@@ -1,6 +1,8 @@
 package com.insurance.info;
 
 import java.awt.EventQueue;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -8,6 +10,8 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,7 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.insurance.info.config.Conn;
+import com.insurance.info.config.DataSourceConfig;
 import com.insurance.info.signup.SignUp;
 import java.awt.Color;
 import java.awt.Button;
@@ -39,9 +43,10 @@ public class InsuranceApplication extends JFrame {
 	private JPanel contentPane;
 	private JTextField unText;
 	private JPasswordField paswdText;
-	private JLabel signUpButton; 
+	private JLabel signUpButton;
 	private int xMouse;
 	private int yMouse;
+
 	/**
 	 * Launch the application.
 	 */
@@ -77,65 +82,57 @@ public class InsuranceApplication extends JFrame {
 				g.drawImage(image, 0, 0, null);
 			}
 		};
-		contentPane.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				xMouse = e.getX();
-				yMouse = e.getY();
-			}
-		});
-		contentPane.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				int x = e.getXOnScreen();
-				int y = e.getYOnScreen();
-				
-				frame.setLocation(x - xMouse, y-yMouse);
-			}
-		});
 
+		makePaneDraggable();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		setupExitAndMinimizeButton();
+
 		JLabel userName = new JLabel("USERNAME");
 		userName.setHorizontalAlignment(SwingConstants.LEFT);
-		userName.setFont(new Font("Serif", Font.PLAIN, 14));
-		userName.setBounds(337, 171, 87, 21);
+		userName.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
+		userName.setBounds(337, 146, 87, 21);
 
 		contentPane.add(userName);
 
 		JLabel paswd = new JLabel("PASSWORD");
-		paswd.setBounds(337, 217, 87, 29);
-		paswd.setFont(new Font("Serif", Font.PLAIN, 14));
+		paswd.setBounds(337, 193, 87, 29);
+		paswd.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
 		contentPane.add(paswd);
 
 		unText = new JTextField();
-		unText.setBounds(434, 173, 197, 21);
+		unText.setBounds(337, 170, 302, 21);
 		contentPane.add(unText);
 		unText.setColumns(10);
 
 		paswdText = new JPasswordField();
-		paswdText.setBounds(434, 223, 197, 21);
+		paswdText.setBounds(337, 222, 302, 21);
 		contentPane.add(paswdText);
 
 		Button login = new Button("LOGIN");
-		login.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
+		login.setFont(new Font("Segoe UI Light", Font.BOLD, 18));
 		login.setForeground(Color.WHITE);
 		login.setBackground(new Color(0, 0, 0));
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					Conn c1 = new Conn();
-					String a = unText.getText();
-					String b = new String(paswdText.getPassword());
-					String q = "select * from account where user_name = '" + a + "' and password = '" + b + "'";
-					ResultSet rs = c1.s.executeQuery(q);
+					Connection connection = DataSourceConfig.getConnection();
+					String username = unText.getText();
+					String password = new String(paswdText.getPassword());
+					String query = "select * from account where user_name = ? and password = ?";
+					PreparedStatement ps = connection.prepareStatement(query);
+					ps.setString(1, username);
+					ps.setString(2, password);
+					ResultSet rs = ps.executeQuery();
 
 					if (arg0.getSource() == login) {
 						if (rs.next()) {
+							System.out.println("Welcome " + username);
 							setVisible(false);
+							new HomeScreen().setVisible(true);
 						}
 					}
 					if (arg0.getSource() == signUpButton) {
@@ -149,52 +146,94 @@ public class InsuranceApplication extends JFrame {
 
 			}
 		});
-		login.setBounds(447, 275, 132, 37);
+		login.setBounds(430, 273, 132, 37);
 		contentPane.add(login);
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setBackground(new Color(39, 39, 132));
 		leftPanel.setBounds(0, -10, 327, 440);
 		contentPane.add(leftPanel);
-		
+
 		JLabel leftImage = new JLabel("");
-		leftImage.setIcon(new ImageIcon(InsuranceApplication.class.getResource("/com/insurance/resources/Login_LeftImage.jpg")));
+		leftImage.setIcon(
+				new ImageIcon(InsuranceApplication.class.getResource("/com/insurance/resources/Login_LeftImage.jpg")));
 		leftPanel.add(leftImage);
 
+		JLabel loginIcon = new JLabel("");
+		loginIcon.setIcon(
+				new ImageIcon(InsuranceApplication.class.getResource("/com/insurance/resources/Login_Icon.png")));
+		loginIcon.setBounds(456, 35, 106, 104);
+		contentPane.add(loginIcon);
+
+		signUpButton = new JLabel("New User? Click Here");
+		signUpButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				setVisible(false);
+				new SignUp().setVisible(true);
+			}
+		});
+		signUpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		signUpButton.setFont(new Font("Segoe UI Light", Font.BOLD, 11));
+		signUpButton.setBounds(440, 316, 117, 14);
+		contentPane.add(signUpButton);
+	}
+
+	private void makePaneDraggable() {
+		contentPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xMouse = e.getX();
+				yMouse = e.getY();
+			}
+		});
+		contentPane.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+
+				frame.setLocation(x - xMouse, y - yMouse);
+			}
+		});
+		
+	}
+
+	private void setupExitAndMinimizeButton() {
+
+		// *************** Exit Button ****************
 		JLabel exitButton = new JLabel("X");
 		exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		exitButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				if (DataSourceConfig.getConnection() != null) {
+					try {
+						DataSourceConfig.getConnection().close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
 				System.exit(0);
 			}
 		});
 		exitButton.setFont(new Font("Tahoma", Font.BOLD, 18));
-		exitButton.setBounds(644, 0, 18, 29);
+		exitButton.setBounds(608, 0, 18, 29);
 		contentPane.add(exitButton);
 
+		// *************** Minimize Button ****************
 		JLabel minimizeButton = new JLabel("_");
-		minimizeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		minimizeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				frame.setState(Frame.ICONIFIED);
-				
+				setState(Frame.ICONIFIED);
 			}
 		});
+		minimizeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
 		minimizeButton.setFont(new Font("Tahoma", Font.BOLD, 18));
-		minimizeButton.setBounds(613, 0, 18, 21);
+		minimizeButton.setBounds(577, 0, 18, 21);
 		contentPane.add(minimizeButton);
-		
-		JLabel loginIcon = new JLabel("");
-		loginIcon.setIcon(new ImageIcon(InsuranceApplication.class.getResource("/com/insurance/resources/Login_Icon.png")));
-		loginIcon.setBounds(458, 46, 106, 104);
-		contentPane.add(loginIcon);
-		
-		signUpButton = new JLabel("New User? Click Here");
-		signUpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		signUpButton.setFont(new Font("Tahoma", Font.BOLD, 11));
-		signUpButton.setBounds(447, 334, 117, 14);
-		contentPane.add(signUpButton);
+
 	}
 }
