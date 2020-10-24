@@ -10,10 +10,17 @@ public class CustomerDetails {
 	private String email;
 	private Timestamp dateofIssue;
 	private String periodOfInsurance;
+	private Timestamp dateOfExpiry;
 	private String typeOfInsurance;
 	
 	
 	
+	public Timestamp getDateOfExpiry() {
+		return dateOfExpiry;
+	}
+	public void setDateOfExpiry(Timestamp dateOfExpiry) {
+		this.dateOfExpiry = dateOfExpiry;
+	}
 	public String getAddress() {
 		return address;
 	}

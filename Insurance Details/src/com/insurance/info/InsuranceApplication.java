@@ -42,8 +42,8 @@ public class InsuranceApplication extends JFrame {
 
 	private static InsuranceApplication frame;
 	private JPanel contentPane;
-	private JTextField unText;
-	private JPasswordField paswdText;
+	private JTextField usernameTextField;
+	private JPasswordField passwordTextField;
 	private JLabel signUpButton;
 	private int xMouse;
 	private int yMouse;
@@ -104,14 +104,14 @@ public class InsuranceApplication extends JFrame {
 		paswd.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
 		contentPane.add(paswd);
 
-		unText = new JTextField();
-		unText.setBounds(337, 170, 302, 21);
-		contentPane.add(unText);
-		unText.setColumns(10);
+		usernameTextField = new JTextField();
+		usernameTextField.setBounds(337, 170, 302, 21);
+		contentPane.add(usernameTextField);
+		usernameTextField.setColumns(10);
 
-		paswdText = new JPasswordField();
-		paswdText.setBounds(337, 222, 302, 21);
-		contentPane.add(paswdText);
+		passwordTextField = new JPasswordField();
+		passwordTextField.setBounds(337, 222, 302, 21);
+		contentPane.add(passwordTextField);
 
 		Button login = new Button("LOGIN");
 		login.setFont(new Font("Segoe UI Light", Font.BOLD, 18));
@@ -119,8 +119,8 @@ public class InsuranceApplication extends JFrame {
 		login.setBackground(new Color(0, 0, 0));
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String username = unText.getText();
-				String password = new String(paswdText.getPassword());
+				String username = usernameTextField.getText();
+				String password = new String(passwordTextField.getPassword());
 				boolean login = InsuranceDao.userLogin(username, password);
 				if (login) {
 					System.out.println("Welcome " + username);
