@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.insurance.info.config.DataSourceConfig;
+import com.insurance.info.dao.InsuranceDao;
 import com.insurance.info.signup.SignUp;
 import java.awt.Color;
 import java.awt.Button;
@@ -118,30 +119,13 @@ public class InsuranceApplication extends JFrame {
 		login.setBackground(new Color(0, 0, 0));
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					Connection connection = DataSourceConfig.getConnection();
-					String username = unText.getText();
-					String password = new String(paswdText.getPassword());
-					String query = "select * from account where user_name = ? and password = ?";
-					PreparedStatement ps = connection.prepareStatement(query);
-					ps.setString(1, username);
-					ps.setString(2, password);
-					ResultSet rs = ps.executeQuery();
-
-					if (arg0.getSource() == login) {
-						if (rs.next()) {
-							System.out.println("Welcome " + username);
-							setVisible(false);
-							new HomeScreen().setVisible(true);
-						}
-					}
-					if (arg0.getSource() == signUpButton) {
-						new SignUp().setVisible(true);
-						setVisible(false);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.out.println("error: " + e);
+				String username = unText.getText();
+				String password = new String(paswdText.getPassword());
+				boolean login = InsuranceDao.userLogin(username, password);
+				if (login) {
+					System.out.println("Welcome " + username);
+					setVisible(false);
+					new HomeScreen().setVisible(true);
 				}
 
 			}
@@ -196,7 +180,7 @@ public class InsuranceApplication extends JFrame {
 				frame.setLocation(x - xMouse, y - yMouse);
 			}
 		});
-		
+
 	}
 
 	private void setupExitAndMinimizeButton() {
