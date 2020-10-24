@@ -1,28 +1,30 @@
 package com.insurance.info;
 
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.sql.SQLException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.insurance.info.config.DataSourceConfig;
 import com.insurance.info.models.CustomerDetails;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Frame;
-
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.sql.SQLException;
-import java.awt.Button;
-
 public class HomeScreen extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private int xMouse;
 	private int yMouse;
@@ -32,7 +34,7 @@ public class HomeScreen extends JFrame {
 	 */
 	public HomeScreen() {
 		setUndecorated(true);
-		
+
 		// ***** FRAME *****
 		setupFrame();
 		makePaneDraggable();
@@ -51,6 +53,8 @@ public class HomeScreen extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				CustomerDetails customer = new CustomerDetails();
 				customer.setTypeOfInsurance("Motor");
+				new InsuranceForm(customer);
+				setVisible(false);
 			}
 		});
 		motorButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -70,7 +74,9 @@ public class HomeScreen extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				CustomerDetails customer = new CustomerDetails();
 				customer.setTypeOfInsurance("Health");
-				
+				new InsuranceForm(customer);
+				setVisible(false);
+
 			}
 		});
 		healthButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -92,12 +98,12 @@ public class HomeScreen extends JFrame {
 		nonMotorLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 18));
 		nonMotorLabel.setBounds(457, 262, 117, 34);
 		contentPane.add(nonMotorLabel);
-		
+
 		Button generateReportButton = new Button("Generate Report");
 		generateReportButton.setFont(new Font("Dialog", Font.BOLD, 18));
 		generateReportButton.setBounds(208, 399, 205, 75);
 		contentPane.add(generateReportButton);
-		
+
 		JLabel orLabel = new JLabel("OR");
 		orLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 18));
 		orLabel.setBounds(302, 307, 51, 50);
@@ -106,7 +112,7 @@ public class HomeScreen extends JFrame {
 	}
 
 	private void setupExitAndMinimizeButton() {
-		
+
 		// *************** Exit Button ****************
 		JLabel exitButton = new JLabel("X");
 		exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -142,6 +148,7 @@ public class HomeScreen extends JFrame {
 		contentPane.add(minimizeButton);
 
 	}
+
 	private void makePaneDraggable() {
 		contentPane.addMouseListener(new MouseAdapter() {
 			@Override
@@ -159,7 +166,7 @@ public class HomeScreen extends JFrame {
 				setLocation(x - xMouse, y - yMouse);
 			}
 		});
-		
+
 	}
 
 	private void setupFrame() {

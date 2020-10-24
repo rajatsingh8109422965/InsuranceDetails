@@ -1,6 +1,5 @@
 package com.insurance.info.models;
 
-import java.sql.Timestamp;
 
 public class CustomerDetails {
 	
@@ -8,18 +7,17 @@ public class CustomerDetails {
 	private String mobileNo;
 	private String address;
 	private String email;
-	private Timestamp dateofIssue;
+	private String dateofIssue;
 	private String periodOfInsurance;
-	private Timestamp dateOfExpiry;
 	private String typeOfInsurance;
+	private String dateOfExpiryDate;
 	
 	
-	
-	public Timestamp getDateOfExpiry() {
-		return dateOfExpiry;
+	public String getDateOfExpiryDate() {
+		return dateOfExpiryDate;
 	}
-	public void setDateOfExpiry(Timestamp dateOfExpiry) {
-		this.dateOfExpiry = dateOfExpiry;
+	public void setDateOfExpiryDate(String dateOfExpiryDate) {
+		this.dateOfExpiryDate = dateOfExpiryDate;
 	}
 	public String getAddress() {
 		return address;
@@ -51,10 +49,10 @@ public class CustomerDetails {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Timestamp getDateofIssue() {
+	public String getDateofIssue() {
 		return dateofIssue;
 	}
-	public void setDateofIssue(Timestamp dateofIssue) {
+	public void setDateofIssue(String dateofIssue) {
 		this.dateofIssue = dateofIssue;
 	}
 	public String getTypeOfInsurance() {

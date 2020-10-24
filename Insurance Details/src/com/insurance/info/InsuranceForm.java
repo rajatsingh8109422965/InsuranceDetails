@@ -1,27 +1,31 @@
 package com.insurance.info;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import com.insurance.info.config.DataSourceConfig;
-
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Cursor;
-
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Properties;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.Button;
+import javax.swing.border.EmptyBorder;
+
+
+import com.insurance.info.config.DataSourceConfig;
+import com.insurance.info.models.CustomerDetails;
+
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 
 public class InsuranceForm extends JFrame {
 
@@ -30,92 +34,117 @@ public class InsuranceForm extends JFrame {
 	private int xMouse;
 	private int yMouse;
 
-	private JTextField firstNameTextField;
-	private JTextField lastNameTextField;
+	private JTextField nameTextField;
+	private JTextField addressTextField;
 	private JTextField emailTextField;
-	private JTextField usernameTextField;
-	private JTextField passwordTextField;
 	private JTextField mobileNoTextField;
 
-	public InsuranceForm() {
+	public InsuranceForm(CustomerDetails customer) {
 		setupFrame();
 
 		makePaneDraggable();
 		setupExitAndMinimizeButton();
 
-		JLabel firstNameLabel = new JLabel("First Name");
+		JLabel firstNameLabel = new JLabel("NAME");
 		firstNameLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
-		firstNameLabel.setBounds(30, 69, 99, 29);
+		firstNameLabel.setBounds(30, 32, 99, 29);
 		contentPane.add(firstNameLabel);
 
-		firstNameTextField = new JTextField();
-		firstNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		firstNameTextField.setBounds(30, 94, 322, 24);
-		contentPane.add(firstNameTextField);
-		firstNameTextField.setColumns(10);
+		nameTextField = new JTextField();
+		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
+		nameTextField.setBounds(30, 62, 322, 24);
+		contentPane.add(nameTextField);
+		nameTextField.setColumns(10);
+		customer.setName(nameTextField.getText());
 
-		JLabel lastNameLabel = new JLabel("Last Name");
-		lastNameLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
-		lastNameLabel.setBounds(30, 127, 99, 29);
-		contentPane.add(lastNameLabel);
+		JLabel addressLabel = new JLabel("ADDRESS");
+		addressLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
+		addressLabel.setBounds(30, 97, 99, 29);
+		contentPane.add(addressLabel);
 
-		lastNameTextField = new JTextField();
-		lastNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		lastNameTextField.setColumns(10);
-		lastNameTextField.setBounds(30, 152, 322, 24);
-		contentPane.add(lastNameTextField);
+		addressTextField = new JTextField();
+		addressTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
+		addressTextField.setColumns(10);
+		addressTextField.setBounds(30, 125, 322, 24);
+		contentPane.add(addressTextField);
+		customer.setAddress(addressTextField.getText());
 
 		emailTextField = new JTextField();
 		emailTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		emailTextField.setColumns(10);
-		emailTextField.setBounds(30, 212, 322, 24);
+		emailTextField.setBounds(30, 192, 322, 24);
 		contentPane.add(emailTextField);
+		customer.setEmail(emailTextField.getText());
 
-		JLabel emailLabel = new JLabel("Email Address");
+		JLabel emailLabel = new JLabel("EMAIL");
 		emailLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
-		emailLabel.setBounds(30, 187, 99, 29);
+		emailLabel.setBounds(30, 160, 99, 29);
 		contentPane.add(emailLabel);
 
-		JLabel usernameLabel = new JLabel("Username");
-		usernameLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
-		usernameLabel.setBounds(30, 247, 99, 29);
-		contentPane.add(usernameLabel);
-
-		usernameTextField = new JTextField();
-		usernameTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		usernameTextField.setColumns(10);
-		usernameTextField.setBounds(30, 272, 322, 24);
-		contentPane.add(usernameTextField);
-
-		JLabel passwordLabel = new JLabel("Password");
-		passwordLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
-		passwordLabel.setBounds(30, 305, 99, 29);
-		contentPane.add(passwordLabel);
-
-		passwordTextField = new JTextField();
-		passwordTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		passwordTextField.setColumns(10);
-		passwordTextField.setBounds(30, 330, 322, 24);
-		contentPane.add(passwordTextField);
+		JLabel periodOfInsuranceLabel = new JLabel("PERIOD OF INSURANCE");
+		periodOfInsuranceLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
+		periodOfInsuranceLabel.setBounds(222, 227, 146, 29);
+		contentPane.add(periodOfInsuranceLabel);
 
 		JLabel mobileNoLabel = new JLabel("Mobile No.");
 		mobileNoLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
-		mobileNoLabel.setBounds(30, 365, 99, 29);
+		mobileNoLabel.setBounds(222, 277, 99, 29);
 		contentPane.add(mobileNoLabel);
 
 		mobileNoTextField = new JTextField();
 		mobileNoTextField.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		mobileNoTextField.setColumns(10);
-		mobileNoTextField.setBounds(30, 390, 322, 24);
+		mobileNoTextField.setBounds(308, 272, 195, 24);
 		contentPane.add(mobileNoTextField);
+		customer.setMobileNo(mobileNoTextField.getText());
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(376, 233, 132, 21);
+		contentPane.add(comboBox);
+		
+		JLabel dateOfIssue = new JLabel("DATE OF ISSUE");
+		dateOfIssue.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
+		dateOfIssue.setBounds(29, 227, 99, 29);
+		contentPane.add(dateOfIssue);
+		
+		JLabel dateOfExpiry = new JLabel("DATE OF EXPIRY");
+		dateOfExpiry.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
+		dateOfExpiry.setBounds(30, 277, 132, 29);
+		contentPane.add(dateOfExpiry);
+		
+		Button submitButton = new Button("SUBMIT");
+		submitButton.setFont(new Font("Ebrima", Font.BOLD, 16));
+		submitButton.setForeground(new Color(255, 255, 255));
+		submitButton.setBackground(new Color(0, 0, 0));
+		submitButton.setBounds(107, 345, 146, 41);
+		contentPane.add(submitButton);
+		
+		
+		
+		
+		insertDetails(customer);
 
-		Button signUpButton = new Button("SIGN UP");
-		signUpButton.setFont(new Font("Ebrima", Font.BOLD, 16));
-		signUpButton.setForeground(new Color(255, 255, 255));
-		signUpButton.setBackground(new Color(0, 0, 0));
-		signUpButton.setBounds(108, 430, 146, 41);
-		contentPane.add(signUpButton);
+	}
 
+	private void insertDetails(CustomerDetails customer) {
+		Connection connection = DataSourceConfig.getConnection();
+		try {
+			PreparedStatement ps=connection.prepareStatement("insert into customer_details (name,mobileno,address,email,date_of_issue,period_of_insurance,date_of_expiry,type_of_insurance) values (?,?,?,?,?,?,?,?)");
+		ps.setString(1, customer.getName());
+		ps.setString(2, customer.getMobileNo());
+		ps.setString(3, customer.getAddress());
+		ps.setString(4, customer.getEmail());
+		ps.setString(5, customer.getDateofIssue());
+		ps.setString(6, customer.getPeriodOfInsurance());
+		ps.setString(7, customer.getDateOfExpiryDate());
+		ps.setString(8, customer.getTypeOfInsurance());
+		
+		System.out.println(ps.execute());
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void setupFrame() {
@@ -125,7 +154,7 @@ public class InsuranceForm extends JFrame {
 		setContentPane(contentPane);
 		setBounds(100, 100, 651, 504);
 		contentPane.setLayout(null);
-
+		setVisible(true);
 	}
 
 	private void setupExitAndMinimizeButton() {
@@ -185,5 +214,4 @@ public class InsuranceForm extends JFrame {
 		});
 
 	}
-
 }
