@@ -26,6 +26,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'master' of https://github.com/rajatsingh8109422965/InsuranceDetails
 import com.insurance.info.config.DataSourceConfig;
 import com.insurance.info.models.CustomerDetails;
 import com.toedter.calendar.JDateChooser;
@@ -127,6 +131,7 @@ public class InsuranceForm extends JFrame {
 		submitButton.setBounds(107, 345, 146, 41);
 		contentPane.add(submitButton);
 
+
 		JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setBounds(134, 232, 78, 20);
 		JTextField field = new JTextField(15);
@@ -145,6 +150,12 @@ public class InsuranceForm extends JFrame {
 			}
 		});
 		contentPane.add(dateChooser);
+
+		
+		
+		
+		
+		insertDetails(customer);
 
 	}
 
