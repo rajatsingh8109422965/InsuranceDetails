@@ -5,30 +5,30 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
 
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
-
 import com.insurance.info.config.DataSourceConfig;
 import com.insurance.info.models.CustomerDetails;
-
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField.AbstractFormatter;
+import com.toedter.calendar.JDateChooser;
 
 public class InsuranceForm extends JFrame {
 
@@ -43,6 +43,7 @@ public class InsuranceForm extends JFrame {
 	private JTextField mobileNoTextField;
 
 	public InsuranceForm(CustomerDetails customer) {
+		setUndecorated(true);
 		setupFrame();
 
 		makePaneDraggable();
@@ -58,7 +59,6 @@ public class InsuranceForm extends JFrame {
 		nameTextField.setBounds(30, 62, 322, 24);
 		contentPane.add(nameTextField);
 		nameTextField.setColumns(10);
-		customer.setName(nameTextField.getText());
 
 		JLabel addressLabel = new JLabel("ADDRESS");
 		addressLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
@@ -100,57 +100,75 @@ public class InsuranceForm extends JFrame {
 		mobileNoTextField.setBounds(308, 272, 195, 24);
 		contentPane.add(mobileNoTextField);
 		customer.setMobileNo(mobileNoTextField.getText());
-		
+
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(376, 233, 132, 21);
 		contentPane.add(comboBox);
-		
+
 		JLabel dateOfIssue = new JLabel("DATE OF ISSUE");
 		dateOfIssue.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
 		dateOfIssue.setBounds(29, 227, 99, 29);
 		contentPane.add(dateOfIssue);
-		
+
 		JLabel dateOfExpiry = new JLabel("DATE OF EXPIRY");
 		dateOfExpiry.setFont(new Font("Segoe UI Light", Font.BOLD, 14));
 		dateOfExpiry.setBounds(30, 277, 132, 29);
 		contentPane.add(dateOfExpiry);
-		
+
 		Button submitButton = new Button("SUBMIT");
+		submitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				insertDetails(customer);
+			}
+		});
 		submitButton.setFont(new Font("Ebrima", Font.BOLD, 16));
 		submitButton.setForeground(new Color(255, 255, 255));
 		submitButton.setBackground(new Color(0, 0, 0));
 		submitButton.setBounds(107, 345, 146, 41);
 		contentPane.add(submitButton);
-		
-		
-		
-		UtilDateModel model = new UtilDateModel();
-		model.setDate(1990, 8, 24);
-		JDatePanelImpl datePanel = new JDatePanelImpl(model,new Properties());
-		
-		insertDetails(customer);
+
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(134, 232, 78, 20);
+		JTextField field = new JTextField(15);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		dateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent e) {
+				JDateChooser chooser = (JDateChooser) e.getSource();
+				field.setText(sdf.format(chooser.getDate()));
+				try {
+					customer.setDateofIssue(new Date(sdf.parse(field.getText()).getTime()));
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		contentPane.add(dateChooser);
 
 	}
 
 	private void insertDetails(CustomerDetails customer) {
+		customer.setName(nameTextField.getText());
 		Connection connection = DataSourceConfig.getConnection();
 		try {
-			PreparedStatement ps=connection.prepareStatement("insert into customer_details (name,mobileno,address,email,date_of_issue,period_of_insurance,date_of_expiry,type_of_insurance) values (?,?,?,?,?,?,?,?)");
-		ps.setString(1, customer.getName());
-		ps.setString(2, customer.getMobileNo());
-		ps.setString(3, customer.getAddress());
-		ps.setString(4, customer.getEmail());
-		ps.setString(5, customer.getDateofIssue());
-		ps.setString(6, customer.getPeriodOfInsurance());
-		ps.setString(7, customer.getDateOfExpiryDate());
-		ps.setString(8, customer.getTypeOfInsurance());
-		
-		System.out.println(ps.execute());
-		
+			PreparedStatement ps = connection.prepareStatement(
+					"insert into customer_details (name,mobileno,address,email,date_of_issue,period_of_insurance,date_of_expiry,type_of_insurance) values (?,?,?,?,?,?,?,?)");
+			ps.setString(1, customer.getName());
+			ps.setString(2, customer.getMobileNo());
+			ps.setString(3, customer.getAddress());
+			ps.setString(4, customer.getEmail());
+			ps.setDate(5, customer.getDateofIssue());
+			ps.setString(6, customer.getPeriodOfInsurance());
+			ps.setDate(7, customer.getDateOfExpiryDate());
+			ps.setString(8, customer.getTypeOfInsurance());
+
+			System.out.println(ps.execute());
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void setupFrame() {

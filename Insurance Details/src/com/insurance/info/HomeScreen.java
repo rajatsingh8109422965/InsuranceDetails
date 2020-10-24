@@ -89,11 +89,6 @@ public class HomeScreen extends JFrame {
 		healthLabel.setBounds(278, 262, 70, 34);
 		contentPane.add(healthLabel);
 
-		// *************** Non-Motor Button ****************
-		JLabel nonMotorButton = new JLabel("");
-		nonMotorButton.setBounds(434, 103, 157, 148);
-		contentPane.add(nonMotorButton);
-
 		JLabel nonMotorLabel = new JLabel("NON-MOTOR");
 		nonMotorLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 18));
 		nonMotorLabel.setBounds(457, 262, 117, 34);
