@@ -1,9 +1,6 @@
 package com.insurance.info.models;
 
-<<<<<<< HEAD
 import java.sql.Date;
-=======
->>>>>>> branch 'master' of https://github.com/rajatsingh8109422965/InsuranceDetails
 
 public class CustomerDetails {
 
