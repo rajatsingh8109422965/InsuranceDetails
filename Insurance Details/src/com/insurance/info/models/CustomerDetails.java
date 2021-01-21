@@ -12,6 +12,10 @@ public class CustomerDetails {
 	private String periodOfInsurance;
 	private String typeOfInsurance;
 	private Date dateOfExpiryDate;
+	private double netPremium;
+	private double totalPremium;
+	private String gst;
+	private String agentName;
 
 	public Date getDateOfExpiryDate() {
 
@@ -77,5 +81,39 @@ public class CustomerDetails {
 	public void setTypeOfInsurance(String typeOfInsurance) {
 		this.typeOfInsurance = typeOfInsurance;
 	}
+
+	public double getNetPremium() {
+		return netPremium;
+	}
+
+	public void setNetPremium(double netPremium) {
+		this.netPremium = netPremium;
+	}
+
+	public double getTotalPremium() {
+		return totalPremium;
+	}
+
+	public void setTotalPremium(double totalPremium) {
+		this.totalPremium = totalPremium;
+	}
+
+	public String getGst() {
+		return gst;
+	}
+
+	public void setGst(String gst) {
+		this.gst = gst;
+	}
+
+	public String getAgentName() {
+		return agentName;
+	}
+
+	public void setAgentName(String agentName) {
+		this.agentName = agentName;
+	}
+	
+	
 
 }
