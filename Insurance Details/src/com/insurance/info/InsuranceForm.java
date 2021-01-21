@@ -28,6 +28,8 @@ import com.insurance.info.config.DataSourceConfig;
 import com.insurance.info.dao.InsuranceDao;
 import com.insurance.info.models.CustomerDetails;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
 public class InsuranceForm extends JFrame {
 
@@ -122,6 +124,10 @@ public class InsuranceForm extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				insertDetails(customer);
+				CustomerDetails customer = new CustomerDetails();
+				customer.setTypeOfInsurance("Motor");
+				new InsuranceForm(customer);
+				setVisible(false);
 			}
 		});
 		submitButton.setFont(new Font("Ebrima", Font.BOLD, 16));
@@ -282,6 +288,23 @@ public class InsuranceForm extends JFrame {
 		minimizeButton.setFont(new Font("Tahoma", Font.BOLD, 18));
 		minimizeButton.setBounds(577, 0, 18, 21);
 		contentPane.add(minimizeButton);
+
+		// *************** HOME Button ****************
+		JLabel homeButton = new JLabel("HOME");
+		homeButton.setVerticalAlignment(SwingConstants.TOP);
+		//homeButton.setIcon(new ImageIcon(InsuranceForm.class.getResource("/com/insurance/resources/Home_Button.png")));
+		homeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				setVisible(false);
+				new HomeScreen().setVisible(true);
+			}
+		});
+		homeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+		homeButton.setFont(new Font("Tahoma", Font.BOLD, 18));
+		homeButton.setBounds(10, 1, 99, 95);
+		contentPane.add(homeButton);
 
 	}
 

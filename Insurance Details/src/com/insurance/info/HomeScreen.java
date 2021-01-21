@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.insurance.info.config.DataSourceConfig;
 import com.insurance.info.models.CustomerDetails;
+import javax.swing.JButton;
 
 public class HomeScreen extends JFrame {
 
@@ -83,6 +84,22 @@ public class HomeScreen extends JFrame {
 		healthButton.setIcon(new ImageIcon(HomeScreen.class.getResource("/com/insurance/resources/health_icon.png")));
 		healthButton.setBounds(235, 103, 157, 148);
 		contentPane.add(healthButton);
+		
+		// *************** Non-Motor Button ****************
+				JLabel nonMotorButton = new JLabel("");
+				nonMotorButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						CustomerDetails customer = new CustomerDetails();
+						customer.setTypeOfInsurance("Non-Motor");
+						new InsuranceForm(customer);
+						setVisible(false);
+					}
+				});
+				nonMotorButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				nonMotorButton.setIcon(new ImageIcon(HomeScreen.class.getResource("/com/insurance/resources/non_motor_icon.jpg")));
+				nonMotorButton.setBounds(435, 103, 149, 148);
+				contentPane.add(nonMotorButton);
 
 		JLabel healthLabel = new JLabel("HEALTH");
 		healthLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 18));
@@ -103,6 +120,10 @@ public class HomeScreen extends JFrame {
 		orLabel.setFont(new Font("Segoe UI Light", Font.BOLD, 18));
 		orLabel.setBounds(302, 307, 51, 50);
 		contentPane.add(orLabel);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setBounds(457, 103, 117, 148);
+		contentPane.add(lblNewLabel);
 
 	}
 
